@@ -1,0 +1,50 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+
+cloud:
+  gateway:
+    globalcors:
+      cors-configurations:
+        '[/**]':
+          allowedOrigins: "http://localhost:3000" # Frontend origin
+          allowedMethods:
+            - GET
+            - POST
+            - PUT
+            - DELETE
+            - OPTIONS
+            - PATCH
+          allowedHeaders:
+            - "Authorization"
+            - "Content-Type"
+            - "Accept"
+          allowCredentials: true
+    routes:
+      - id: users-service
+        uri: lb://user-service
+        predicates:
+          - Path=/api/users/**
+          - Path=/api/artist/**
+      - id: payment-service
+        uri: lb://payment-service
+        predicates:
+          - Path=/api/payments/**
+      - id: content-service
+        uri: lb://content-service
+        predicates:
+          - Path=/api/albums/**
+          - Path=/api/songs/**
+          - Path=/api/products/**
+          - Path=/api/comments/**
+      - id: orders-service
+        uri: lb://orders-service
+        predicates:
+          - Path=/api/orders/**
+      - id: notifications-service
+        uri: lb://notifications-service
+        predicates:
+          - Path=/notifications/**
